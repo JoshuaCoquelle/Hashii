@@ -17,9 +17,7 @@ var Hashii = (function() {
         $scope.$element = _elementByHook();
         $scope.$defaults = _defaults();
         $scope.$settings = $scope.options;
-        $scope.$tags = function() {
-            return _returnHashtagsFrom(_scopedFields($scope.$element));
-        }
+        $scope.$tags = _returnTags();
 
         _validateArgsThenBoot(arguments[0]);
     }
@@ -176,6 +174,10 @@ var Hashii = (function() {
         }
 
         return field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
+    }
+
+    function _returnTags() {
+        return _returnHashtagsFrom(_scopedFields($scope.$element));
     }
 
     /*
