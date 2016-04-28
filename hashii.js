@@ -18,15 +18,24 @@ var Hashii = (function() {
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii setup :: ~ Private ~
+    | Hashii initialization :: ~ Private ~
     |--------------------------------------------------------------------------
     */
    
    /**
-    * Boots important library methods.
+    * Boot internal library methods
     */
     function _boot(element) {
-        console.log(element);
+        /*
+                 @TODO
+        =========================
+        - Collection input/inputs
+        - Parse hashtags
+        - Format and return collection based on options
+        - Add hashtag highlighting when typing?
+         */
+        
+        _collectFieldsFrom(element);
     }
 
     /**
@@ -43,9 +52,9 @@ var Hashii = (function() {
     }
 
     /**
-     * Validate constructor arguments.
+     * Validate constructor arguments and boot.
      * 
-     * @param  {Object} options :: Throw error if argument is incorrect.
+     * @param  {Object} options :: Throw error if argument is incorrect otherwise boot.
      */
     function _validateArgsThenBoot(options, callback) {
         if (options && typeof options !== 'object') {
@@ -66,7 +75,7 @@ var Hashii = (function() {
      */
     function _override(source, options) {
         for (var prop in options) {
-            if (source.hasOwnProperty(prop) && typeof options[prop] === 'string') {
+            if (source.hasOwnProperty(prop)) {
                 source[prop] = options[prop];
             }
         }
@@ -76,14 +85,14 @@ var Hashii = (function() {
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii core methods :: ~ Private ~
+    | Hashii internal methods :: ~ Private ~
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Hashii DOM element
+     * Hashii DOM element.
      * 
-     * @return {Element} :: Return elements used with Hashii alias.
+     * @return {Element} :: Validate and return element with Hashii hook.
      */
     function _elementByHook() {
         var element = document.querySelector('[hashii\\:' + $scope.options.alias.toLowerCase() + ']');
@@ -97,7 +106,7 @@ var Hashii = (function() {
      * Check element validity.
      * 
      * @param  {Element} element :: DOM element utilized by Hashii
-     * @return {Boolean}         :: Element has passed conditions
+     * @return {Boolean}         :: Element has met conditions
      */
     function _elementMeetsConditions(element) {
         if (element === null) {
@@ -115,32 +124,45 @@ var Hashii = (function() {
     }
 
     /**
-     * Validate fields.
+     * Collection of input fields.
      * 
-     * @param  {Array} fields :: Check if fields are textarea or input.
-     * @return {Array}
+     * @param  {Element} element :: Hashii DOM element.
+     * @return {Array}           :: Filtered fields collection
      */
-    function _collectInputs(fields) {
-        // var fields = [].slice.call(fields, 0);
+    function _collectFieldsFrom(element) {
+        var collection = _buildFieldCollectionFrom(element);
 
-        // var validFields = fields.filter(function(el) {
-        //     return el.tagName === 'TEXTAREA' || el.tagName === 'INPUT';
-        // });
+        var filteredCollection = collection.filter(function(field) {
+            return field.tagName === 'TEXTAREA' || field.tagName === 'INPUT';
+        });
 
-        // return validFields;
+        return filteredCollection;
     }
 
-    // function _parseForm(fields) {
-    //     var hashArray = [];
-    //     var inputs = _collectInputs(fields);
+    /**
+     * Builds collection of fields from element.
+     * 
+     * @param  {Element} element :: Hashii DOM element.
+     * @return {Array}           :: Return newly built collection.
+     */
+    function _buildFieldCollectionFrom(element) {
+        var collection;
 
-    //     inputs.forEach(function(field) {
-    //         hashArray.push(_parseHashtags(field.value)[0]);
-    //     });
+        if (element.tagName === 'FORM' && element.childElementCount) {
+            collection = [].slice.call(element.children);
+        } else {
+            collection = [element];
+        }
 
-    //     console.log(hashArray);
-    // }
+        return collection;
+    }
 
+    /**
+     * Parse hashtags from element field(s).
+     * 
+     * @param  {String} field
+     * @return {Array}
+     */
     function _parseHashtags(field) {
         return field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
     }
@@ -178,6 +200,11 @@ var Hashii = (function() {
         return document.querySelector('[hashii\\:' + $scope.options.alias.toLowerCase() + ']');
     };
 
+    /**
+     * Hashtags from Data.
+     * 
+     * @return {Array} :: Returns array of hashtags to send with XHR.
+     */
     Hashii.prototype.$data = function() {
         return ['placeholder', 'test'];
     };
@@ -187,16 +214,3 @@ var Hashii = (function() {
      */
     return Hashii;
 })();
-
-
-
-
-
-
-        // if (tag === 'FORM') {
-        //     _parseForm(element);
-        // } else if (tag === 'INPUT' || tag === 'TEXTAREA') {
-        //     _parseField(element);
-        // } else {
-        //     throw new Error('Hashii selector must be of element type form, input or textarea.');
-        // }
