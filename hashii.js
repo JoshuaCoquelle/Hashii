@@ -1,12 +1,7 @@
-var Hashii = (function() {
-    /*
-    |--------------------------------------------------------------------------
-    | Hashii setup and error methods :: ~ Private ~
-    |--------------------------------------------------------------------------
-    */
-   
+var Hashii = (function() {   
     /**
      * Hashii constructor.
+     *
      * @param  {Object} options :: Override Hashii defaults.
      */
     function Hashii(options) {
@@ -15,6 +10,12 @@ var Hashii = (function() {
         $scope = this;
         $scope.options = _override(_defaults(), options);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hashii setup and error handling :: ~ Private ~
+    |--------------------------------------------------------------------------
+    */
    
     /**
      * Hashii module scope accessor.
@@ -23,6 +24,7 @@ var Hashii = (function() {
 
     /**
      * Hashii instance defaults.
+     * 
      * @return {Object} :: Return defaults for overriding.
      */
     function _defaults() {
@@ -35,6 +37,7 @@ var Hashii = (function() {
 
     /**
     * Validate constructor arguments.
+    * 
     * @param  {Object} options :: Throw error if argument is incorrect.
     */
     function _validateArguments(options) {
@@ -45,6 +48,7 @@ var Hashii = (function() {
 
     /**
     * Override Hashii default options.
+    * 
     * @param  {Object} source :: Default options object.
     * @param  {Object} options :: User passed options argument.
     * @return {Object}
@@ -67,6 +71,7 @@ var Hashii = (function() {
 
     /**
     * Hashii DOM element
+    * 
     * @return {Element} :: Return element used with Hashii alias.
     */
     function _elementFromAlias() {
@@ -79,6 +84,7 @@ var Hashii = (function() {
 
     /**
      * Determine Hashii element type.
+     * 
      * @return {Function} :: Call method dynamically based on element.
      */
     function _fieldsController() {
@@ -116,6 +122,7 @@ var Hashii = (function() {
 
     /**
     * Hashii defaults.
+    * 
     * @return {Object} :: Return Hashii defaults for user reference.
     */
     Hashii.prototype.$defaults = function() {
@@ -124,6 +131,7 @@ var Hashii = (function() {
 
     /**
     * Hashii options.
+    * 
     * @return {Object} :: Return Hashii instance options.
     */
     Hashii.prototype.$options = function() {
@@ -132,6 +140,7 @@ var Hashii = (function() {
 
     /**
     * Hashii alias key.
+    * 
     * @return {String} :: Return the unique Hashii key used in DOM.
     */
     Hashii.prototype.$element = function() {
