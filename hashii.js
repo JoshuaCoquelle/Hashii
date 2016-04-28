@@ -1,26 +1,33 @@
-var Hashii = (function() {   
+var Hashii = (function() {  
+    /**
+     * Hashii module scope accessor.
+     */
+    var $scope;
+
     /**
      * Hashii constructor.
      *
      * @param  {Object} options :: Override Hashii defaults.
      */
     function Hashii(options) {
-        _validateArguments(arguments[0]);
-
         $scope = this;
         $scope.options = _override(_defaults(), options);
+
+        _validateArgsThenBoot(arguments[0], _boot);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii setup and error handling :: ~ Private ~
+    | Hashii setup :: ~ Private ~
     |--------------------------------------------------------------------------
     */
    
-    /**
-     * Hashii module scope accessor.
-     */
-    var $scope;
+   /**
+    * Boots important library methods.
+    */
+    function _boot(element) {
+        console.log(element);
+    }
 
     /**
      * Hashii instance defaults.
@@ -36,26 +43,30 @@ var Hashii = (function() {
     }
 
     /**
-    * Validate constructor arguments.
-    * 
-    * @param  {Object} options :: Throw error if argument is incorrect.
-    */
-    function _validateArguments(options) {
+     * Validate constructor arguments.
+     * 
+     * @param  {Object} options :: Throw error if argument is incorrect.
+     */
+    function _validateArgsThenBoot(options, callback) {
         if (options && typeof options !== 'object') {
             throw new Error('Options argument must be of type object');
+        }
+
+        if (typeof callback === 'function') {
+            callback(_elementByHook());
         }
     }
 
     /**
-    * Override Hashii default options.
-    * 
-    * @param  {Object} source :: Default options object.
-    * @param  {Object} options :: User passed options argument.
-    * @return {Object}
-    */
+     * Override Hashii default options.
+     * 
+     * @param  {Object} source :: Default options object.
+     * @param  {Object} options :: User passed options argument.
+     * @return {Object}
+     */
     function _override(source, options) {
         for (var prop in options) {
-            if (source.hasOwnProperty(prop)) {
+            if (source.hasOwnProperty(prop) && typeof options[prop] === 'string') {
                 source[prop] = options[prop];
             }
         }
@@ -70,48 +81,68 @@ var Hashii = (function() {
     */
 
     /**
-    * Hashii DOM element
-    * 
-    * @return {Element} :: Return element used with Hashii alias.
-    */
-    function _elementFromAlias() {
+     * Hashii DOM element
+     * 
+     * @return {Element} :: Return elements used with Hashii alias.
+     */
+    function _elementByHook() {
         var element = document.querySelector('[hashii\\:' + $scope.options.alias.toLowerCase() + ']');
 
-        if (element === null) throw new Error('Hashii key is incorrect or does not exist.');
-
-        return element;
-    }
-
-    /**
-     * Determine Hashii element type.
-     * 
-     * @return {Function} :: Call method dynamically based on element.
-     */
-    function _fieldsController() {
-        var element = _elementFromAlias();
-        var tag = element.tagName;
-
-        if (tag === 'FORM') {
-            _parseForm(element);
-        } else if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            _parseInput(element);
-        } else {
-            throw new Error('Hashii selector must be of element type form, input or textarea.');
+        if (_elementMeetsConditions(element)) {
+            return element;
         }
     }
 
-    function _parseForm(fields) {
-        [].forEach.call(fields, function(field, index) {
-            console.log(field.value);
-        });
+    /**
+     * Check element validity.
+     * 
+     * @param  {Element} element :: DOM element utilized by Hashii
+     * @return {Boolean}         :: Element has passed conditions
+     */
+    function _elementMeetsConditions(element) {
+        if (element === null) {
+            throw new Error('Hashii key is incorrect or does not exist.');
+        }
+
+        if (element.tagName !== 'FORM' &&
+            element.tagName !== 'INPUT' &&
+            element.tagName !== 'TEXTAREA')
+        {
+            throw new Error('Hashii selector must be of element type form, input or textarea.');
+        }
+
+        return true;
     }
 
-    function _parseInput(field) {
-        // @TODO
+    /**
+     * Validate fields.
+     * 
+     * @param  {Array} fields :: Check if fields are textarea or input.
+     * @return {Array}
+     */
+    function _collectInputs(fields) {
+        // var fields = [].slice.call(fields, 0);
+
+        // var validFields = fields.filter(function(el) {
+        //     return el.tagName === 'TEXTAREA' || el.tagName === 'INPUT';
+        // });
+
+        // return validFields;
     }
 
-    function _parseHashtags() {
-        // @TODO
+    // function _parseForm(fields) {
+    //     var hashArray = [];
+    //     var inputs = _collectInputs(fields);
+
+    //     inputs.forEach(function(field) {
+    //         hashArray.push(_parseHashtags(field.value)[0]);
+    //     });
+
+    //     console.log(hashArray);
+    // }
+
+    function _parseHashtags(field) {
+        return field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
     }
 
     /*
@@ -121,34 +152,51 @@ var Hashii = (function() {
     */
 
     /**
-    * Hashii defaults.
-    * 
-    * @return {Object} :: Return Hashii defaults for user reference.
-    */
+     * Hashii defaults.
+     * 
+     * @return {Object} :: Return Hashii defaults for user reference.
+     */
     Hashii.prototype.$defaults = function() {
         return _defaults();
     };
 
     /**
-    * Hashii options.
-    * 
-    * @return {Object} :: Return Hashii instance options.
-    */
+     * Hashii options.
+     * 
+     * @return {Object} :: Return Hashii instance options.
+     */
     Hashii.prototype.$options = function() {
         return $scope.options;
     };
 
     /**
-    * Hashii alias key.
-    * 
-    * @return {String} :: Return the unique Hashii key used in DOM.
-    */
+     * Hashii alias key.
+     * 
+     * @return {String} :: Return the unique Hashii key used in DOM.
+     */
     Hashii.prototype.$element = function() {
         return document.querySelector('[hashii\\:' + $scope.options.alias.toLowerCase() + ']');
     };
 
+    Hashii.prototype.$data = function() {
+        return ['placeholder', 'test'];
+    };
+
     /**
-    * Return the Hashii object.
-    */
+     * Return the Hashii object.
+     */
     return Hashii;
 })();
+
+
+
+
+
+
+        // if (tag === 'FORM') {
+        //     _parseForm(element);
+        // } else if (tag === 'INPUT' || tag === 'TEXTAREA') {
+        //     _parseField(element);
+        // } else {
+        //     throw new Error('Hashii selector must be of element type form, input or textarea.');
+        // }
