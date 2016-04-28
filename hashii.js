@@ -7,13 +7,21 @@ var Hashii = (function() {
     /**
      * Hashii constructor.
      *
-     * @param  {Object} options :: Override Hashii defaults.
+     * @param  {Object} options
      */
     function Hashii(options) {
         $scope = this;
         $scope.options = _override(_defaults(), options);
 
-        _validateArgsThenBoot(arguments[0], _boot);
+        /* Console accessors */
+        $scope.$element = _elementByHook();
+        $scope.$defaults = _defaults();
+        $scope.$settings = $scope.options;
+        $scope.$tags = function() {
+            return _returnHashtagsFrom(_scopedFields($scope.$element));
+        }
+
+        _validateArgsThenBoot(arguments[0]);
     }
 
     /*
@@ -21,22 +29,6 @@ var Hashii = (function() {
     | Hashii initialization :: ~ Private ~
     |--------------------------------------------------------------------------
     */
-   
-   /**
-    * Boot internal library methods
-    */
-    function _boot(element) {
-        /*
-                 @TODO
-        =========================
-        - Collection input/inputs
-        - Parse hashtags
-        - Format and return collection based on options
-        - Add hashtag highlighting when typing?
-         */
-        
-        _collectFieldsFrom(element);
-    }
 
     /**
      * Hashii instance defaults.
@@ -45,9 +37,9 @@ var Hashii = (function() {
      */
     function _defaults() {
         return {
-            alias: '',
-            wrapWithTag: false,
-            supportMarkdown: false
+            key: '',
+            includeHash: false,
+            wrapWithTag: false
         };
     }
 
@@ -56,13 +48,9 @@ var Hashii = (function() {
      * 
      * @param  {Object} options :: Throw error if argument is incorrect otherwise boot.
      */
-    function _validateArgsThenBoot(options, callback) {
+    function _validateArgsThenBoot(options) {
         if (options && typeof options !== 'object') {
             throw new Error('Options argument must be of type object');
-        }
-
-        if (typeof callback === 'function') {
-            callback(_elementByHook());
         }
     }
 
@@ -95,7 +83,7 @@ var Hashii = (function() {
      * @return {Element} :: Validate and return element with Hashii hook.
      */
     function _elementByHook() {
-        var element = document.querySelector('[hashii\\:' + $scope.options.alias.toLowerCase() + ']');
+        var element = document.querySelector('[hashii\\:' + $scope.options.key.toLowerCase() + ']');
 
         if (_elementMeetsConditions(element)) {
             return element;
@@ -129,8 +117,8 @@ var Hashii = (function() {
      * @param  {Element} element :: Hashii DOM element.
      * @return {Array}           :: Filtered fields collection
      */
-    function _collectFieldsFrom(element) {
-        var collection = _buildFieldCollectionFrom(element);
+    function _scopedFields(element) {
+        var collection = _buildFieldsCollectionFrom(element);
 
         var filteredCollection = collection.filter(function(field) {
             return field.tagName === 'TEXTAREA' || field.tagName === 'INPUT';
@@ -145,10 +133,10 @@ var Hashii = (function() {
      * @param  {Element} element :: Hashii DOM element.
      * @return {Array}           :: Return newly built collection.
      */
-    function _buildFieldCollectionFrom(element) {
+    function _buildFieldsCollectionFrom(element) {
         var collection;
 
-        if (element.tagName === 'FORM' && element.childElementCount) {
+        if (element.tagName === 'FORM' && element.childElementCount > 0) {
             collection = [].slice.call(element.children);
         } else {
             collection = [element];
@@ -160,10 +148,33 @@ var Hashii = (function() {
     /**
      * Parse hashtags from element field(s).
      * 
-     * @param  {String} field
-     * @return {Array}
+     * @param  {Array} collection :: Array of DOM inputs within Hashii scope.
+     * @return {Array}            :: Return formatted array of hashtags.
      */
-    function _parseHashtags(field) {
+    function _returnHashtagsFrom(collection) {
+        var hashtags = [];
+
+        [].map.call(collection, function(field) {
+            hashtags = hashtags.concat(_getHashtagsFrom(field.value));
+        });
+
+        return hashtags;
+    }
+
+    /**
+     * Return hashtags that match hash regex.
+     * 
+     * @param  {String} field :: String value to compare regex with.
+     * @return {Array}        :: Return array containing hashtag matches.
+     */
+    function _getHashtagsFrom(field) {
+        if (!$scope.options.includeHash) {
+            var hashArray = field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
+            var strippedHash = hashArray.map(function (tag) { return tag.replace('#',''); });
+
+            return strippedHash;
+        }
+
         return field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
     }
 
@@ -172,42 +183,6 @@ var Hashii = (function() {
     | Hashii API methods :: ~ Public ~
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * Hashii defaults.
-     * 
-     * @return {Object} :: Return Hashii defaults for user reference.
-     */
-    Hashii.prototype.$defaults = function() {
-        return _defaults();
-    };
-
-    /**
-     * Hashii options.
-     * 
-     * @return {Object} :: Return Hashii instance options.
-     */
-    Hashii.prototype.$options = function() {
-        return $scope.options;
-    };
-
-    /**
-     * Hashii alias key.
-     * 
-     * @return {String} :: Return the unique Hashii key used in DOM.
-     */
-    Hashii.prototype.$element = function() {
-        return document.querySelector('[hashii\\:' + $scope.options.alias.toLowerCase() + ']');
-    };
-
-    /**
-     * Hashtags from Data.
-     * 
-     * @return {Array} :: Returns array of hashtags to send with XHR.
-     */
-    Hashii.prototype.$data = function() {
-        return ['placeholder', 'test'];
-    };
 
     /**
      * Return the Hashii object.
