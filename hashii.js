@@ -1,4 +1,4 @@
-var Hashii = (function() {  
+var Hashii = (function() {
     /**
      * Hashii module scope accessor.
      */
@@ -14,12 +14,12 @@ var Hashii = (function() {
         $scope.options = _override(_defaults(), options);
 
         /* Console accessors */
-        $scope.$element = _elementByHook();
+        $scope.$element = _getElementByHook();
         $scope.$defaults = _defaults();
         $scope.$settings = $scope.options;
         $scope.$tags = _returnTags();
 
-        _validateArgsThenBoot(arguments[0]);
+        _validateArguments(arguments[0]);
     }
 
     /*
@@ -46,7 +46,7 @@ var Hashii = (function() {
      * 
      * @param  {Object} options :: Throw error if argument is incorrect otherwise boot.
      */
-    function _validateArgsThenBoot(options) {
+    function _validateArguments(options) {
         if (options && typeof options !== 'object') {
             throw new Error('Options argument must be of type object');
         }
@@ -80,7 +80,7 @@ var Hashii = (function() {
      * 
      * @return {Element} :: Validate and return element with Hashii hook.
      */
-    function _elementByHook() {
+    function _getElementByHook() {
         var element = document.querySelector('[hashii\\:' + $scope.options.key.toLowerCase() + ']');
 
         if (_elementMeetsConditions(element)) {
@@ -167,25 +167,25 @@ var Hashii = (function() {
      */
     function _getHashtagsFrom(field) {
         if (!$scope.options.includeHash) {
-            var hashArray = field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
-            var strippedHash = hashArray.map(function (tag) { return tag.replace('#',''); });
+            var stripHashes = field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g).map(function (tag) {
+                return tag.replace('#','');
+            });
 
-            return strippedHash;
+            return stripHashes;
         }
 
         return field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g);
     }
 
+    /**
+     * Parsed harshtags.
+     * 
+     * @return {Array} :: Return the parsed hashtags in an array.
+     */
     function _returnTags() {
         return _returnHashtagsFrom(_scopedFields($scope.$element));
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Hashii API methods :: ~ Public ~
-    |--------------------------------------------------------------------------
-    */
-
+    
     /**
      * Return the Hashii object.
      */
