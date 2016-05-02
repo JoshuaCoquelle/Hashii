@@ -1,3 +1,14 @@
+/*
+
+  _    _           _____ _    _ _____ _____ 
+ | |  | |   /\    / ____| |  | |_   _|_   _|
+ | |__| |  /  \  | (___ | |__| | | |   | |  
+ |  __  | / /\ \  \___ \|  __  | | |   | |  
+ | |  | |/ ____ \ ____) | |  | |_| |_ _| |_ 
+ |_|  |_/_/    \_\_____/|_|  |_|_____|_____|
+
+ */
+
 var Hashii = (function() {
     /**
      * Hashii module scope accessor.
@@ -35,9 +46,9 @@ var Hashii = (function() {
      */
     function _defaults() {
         return {
-            key: '',
+            ref: '',
+            format: '[]',
             includeHash: false,
-            wrapWithTag: false
         };
     }
 
@@ -55,7 +66,7 @@ var Hashii = (function() {
     /**
      * Override Hashii default options.
      * 
-     * @param  {Object} source :: Default options object.
+     * @param  {Object} source  :: Default options object.
      * @param  {Object} options :: User passed options argument.
      * @return {Object}
      */
@@ -78,10 +89,10 @@ var Hashii = (function() {
     /**
      * Hashii DOM element.
      * 
-     * @return {Element} :: Validate and return element with Hashii hook.
+     * @return {Element} :: Validate and return element with Hashii reference hook.
      */
     function _returnHashiiDomElement() {
-        var element = document.querySelector('[hashii\\:' + $scope.options.key.toLowerCase() + ']');
+        var element = document.querySelector('[hashii\\:' + $scope.options.ref.toLowerCase() + ']');
 
         if (_elementMeetsConditions(element)) {
             return element;
@@ -144,28 +155,12 @@ var Hashii = (function() {
     }
 
     /**
-     * create hashtags array from element field(s).
-     * 
-     * @param  {Array} collection :: Array of DOM inputs within Hashii scope.
-     * @return {Array}            :: Return formatted array of hashtags.
-     */
-    function _createHashtagsArrayFrom(collection) {
-        var hashtags = [];
-
-        [].map.call(collection, function(field) {
-            hashtags = hashtags.concat(_parseHashtagsFrom(field.value));
-        });
-
-        return hashtags;
-    }
-
-    /**
      * Parse hashtags that match hash regex.
      * 
      * @param  {String} field :: String value to compare regex with.
      * @return {Array}        :: Return array containing hashtag matches.
      */
-    function _parseHashtagsFrom(field) {
+    function _parseTagsFrom(field) {
         if (!$scope.options.includeHash) {
             var strippedHashes = field.match(/(?:^|)(?:#)([a-zA-Z\d]+)/g).map(function (tag) {
                 return tag.replace('#','');
@@ -178,19 +173,54 @@ var Hashii = (function() {
     }
 
     /**
-     * Parsed hashtags.
+     * Create hashtags array from element field(s).
      * 
-     * @return {Array} :: Return the collected hashtags.
+     * @param  {Array} collection :: Array of DOM inputs within Hashii scope.
+     * @return {Array}            :: Return formatted array of hashtags.
      */
-    function _returnTags() {
-        var hashtagArray = _createHashtagsArrayFrom(_validFieldsArray($scope.$element));
+    function _createTagsArrayFrom(collection) {
+        var hashtags = [];
+
+        [].map.call(collection, function(field) {
+            hashtags = hashtags.concat(_parseTagsFrom(field.value));
+        });
+
+        return hashtags;
+    }
+
+    /**
+     * Convert hashtags array into JSON string.
+     * 
+     * @return {Object} :: JSON hashtags using index as keys.
+     */
+    function _convertTagsToJSON() {
+        var hashtagArray = _createTagsArrayFrom(_validFieldsArray($scope.$element));
 
         var tags = hashtagArray.reduce(function(obj, value, index) {
             obj[index] = value;
             return obj;
         }, {});
 
-        return tags;
+        return JSON.stringify(tags);
+    }
+
+    /**
+     * Return formatted hashtags to caller.
+     * 
+     * @return {Function} :: Converts tags into object or array.
+     */
+    function _returnTags() {
+        var format = $scope.options.format;
+        
+        if (format.indexOf('[') >= 0) {
+            return _createTagsArrayFrom(
+                _validFieldsArray($scope.$element)
+            );
+        }
+
+        if (format.indexOf('{') >= 0) {
+            return _convertTagsToJSON();
+        }
     }
 
     /**
