@@ -8,10 +8,10 @@ Getting Hashii up and running is extremely simple, the only requirement is that 
 
 ```js
 /*
-Hashi attribute syntax
-hashii:[/*key name*/]
-ex: hashii:posts, hashii:comments, hashii:blog
-*/
+ * Hashi attribute syntax
+ * hashii:[key name]
+ * ex: hashii:posts, hashii:comments, hashii:blog
+ */
 
 var comments = new Hashii({ ref: 'comments' });
 
@@ -34,7 +34,7 @@ By default, Hashii will return a single array of the parsed hashtags **without**
 var defaults = {
     ref: '', // *required
     format: '[]',
-    includeHash: false,
+    includeHash: false
 };
 ```
 
