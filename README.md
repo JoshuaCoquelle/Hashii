@@ -2,6 +2,12 @@
 
 Easily parse and prepare hashtags to send with AJAX requests. No dependencies, no headaches.
 
+## Installation
+```
+// Easy peasy
+npm install hashii
+```
+
 ## Using Hashii
 
 Getting Hashii up and running is extremely simple, the only requirement is that you pass the constructor an object containing the name of your custom Hashii attribute using the 'ref' object key (element reference).
@@ -54,20 +60,18 @@ var languages = new Hashii({
 {"0":"#PHP","1":"#Ruby","2":"#Python"}
 ```
 
-
-
 There are two ways that you can use Hashii. The first way is to hook the hashii:[key name] attribute onto your entire form within the <form> tag like the example below. This method will scrape hashtags from every input and/or textarea within that form.
 
 ```html
 <!-- Scrapes all input/textareas within form -->
-<form hashii:posts>/**/</form>
+<form hashii:posts><!-- /*fields*/ --></form>
 ````
 
 The second way Hashii can be used is to place the hashii:[key name] onto a single field whether inside a form or just an input field on it's own like so:
 
 ```html
 <!-- Will only parse this field for hashtags -->
-<input type="text" name="albums" hashii:bands />
+<input type="text" name="bands" hashii:bands />
 ```
 
 Once you have created your Hashii instance, you can return your hashtags collection by calling $tags on your instance:

@@ -1,0 +1,25 @@
+{
+  "name": "hashii",
+  "version": "1.0.0",
+  "description": "Easily parse hashtags from entire forms or fields without any of the headache.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshuaCoquelle/Hashii.git"
+  },
+  "keywords": [
+    "hashii",
+    "hashtags",
+    "tags",
+    "forms"
+  ],
+  "author": "“Joshua <“joshuacoquelle@gmail.com”> (https://github.com/JoshuaCoquelle)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JoshuaCoquelle/Hashii/issues"
+  },
+  "homepage": "https://github.com/JoshuaCoquelle/Hashii#readme"
+}

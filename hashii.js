@@ -228,3 +228,7 @@ var Hashii = (function() {
      */
     return Hashii;
 })();
+
+if (typeof module !== 'undefined') {
+    module.exports = Hashii;
+}
