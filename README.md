@@ -1,16 +1,15 @@
 # ~ Hashii ~
 
-Easily parse and prepare hashtags to send with AJAX requests. No dependencies, no headaches.
+Easily parse and format hashtags to send with AJAX requests. No dependencies, no headaches.
 
 ## Installation
 ```
-// Easy peasy
 npm install hashii
 ```
 
 ## Using Hashii
 
-Getting Hashii up and running is extremely simple, the only requirement is that you pass the constructor an object containing the name of your custom Hashii attribute using the 'ref' object key (element reference).
+Getting Hashii up and running is simple, the only requirement is that you pass the constructor an object containing the name of your custom Hashii attribute, using the 'ref' object property (element reference).
 
 ```js
 /*
@@ -31,7 +30,7 @@ That's all you need!
 By default, Hashii will return a single array of the parsed hashtags **without** the '#' symbol. Below are the configuarable defaults for your Hashii instance.
 
 ```js
-// Default return format
+/* Default return format */
 ["PHP", "Ruby", "Python"]
 ```
 
@@ -44,23 +43,23 @@ var defaults = {
 };
 ```
 
-## Alternative Config
+## Alternative Configuration Options
 
-Alternatively, if you would like to have a JSON result rather than an array, all you need to do is pass more options to your Hashii constructor to override the above defaults.
+If you would like to consume JSON rather than an array, all you need to do is pass a few more options to your Hashii constructor to override the above defaults.
 
 ```js
-// Expect a JSON object with the '#' symbol included this time
+/* Expect a JSON object with the '#' symbol included this time */
 var languages = new Hashii({
     ref: 'languages',
     format: '{}',
     includeHash: true
 });
 
-// result
+/* result */
 {"0":"#PHP","1":"#Ruby","2":"#Python"}
 ```
 
-There are two ways that you can use Hashii. The first way is to hook the hashii:[key name] attribute onto your entire form within the <form> tag like the example below. This method will scrape hashtags from every input and/or textarea within that form.
+There are two ways that you can use Hashii. The first way is to hook the hashii:[key name] attribute onto your entire form within the <form> tag like the example below. This method will gather hashtags from every input and/or textarea within that form.
 
 ```html
 <!-- Scrapes all input/textareas within form -->
@@ -74,20 +73,23 @@ The second way Hashii can be used is to place the hashii:[key name] onto a singl
 <input type="text" name="bands" hashii:bands />
 ```
 
-Once you have created your Hashii instance, you can return your hashtags collection by calling $tags on your instance:
+Once you have created your Hashii instance, you can return your hashtags collection by calling $tags() on your instance:
 
 ```js
 var bands = new Hashii({ ref: 'bands' });
-console.log(bands.$tags);
+
+/* Remember to use parens when calling $tags() */
+console.log(bands.$tags());
 
 // returns
 ["zeppelin", "hendrix", "sabbath"]
 
 ````
-## Console accessors
-Apart from the hashii.$tags accessor, Hashii offers a few instance keys to call on that can return configuration information about your Hashii instance for your reference.
 
-* hashii.$element // returns DOM element hashii:[*key name*] is on
+## Console accessors
+Hashii offers a few instance keys to call on that can return configuration information about your Hashii instance for reference.
+
+* hashii.$element // returns DOM element hashii:[key name] is on
 * hashii.$defaults // returns Hashii default object for reference
 * hashii.$settings // returns your instance configuration
 

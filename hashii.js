@@ -9,7 +9,7 @@
 
  */
 
-var Hashii = (function() {
+(function() {
     /**
      * Hashii module scope accessor.
      */
@@ -28,7 +28,6 @@ var Hashii = (function() {
         $scope.$element = _returnHashiiDomElement();
         $scope.$defaults = _defaults();
         $scope.$settings = $scope.options;
-        $scope.$tags = _returnTags();
 
         _validateArguments(arguments[0]);
     }
@@ -181,7 +180,9 @@ var Hashii = (function() {
     function _createTagsArrayFrom(collection) {
         var hashtags = [];
 
-        [].map.call(collection, function(field) {
+        collection.filter(function(field) {
+            return field.value != '';
+        }).forEach(function(field) {
             hashtags = hashtags.concat(_parseTagsFrom(field.value));
         });
 
@@ -223,12 +224,23 @@ var Hashii = (function() {
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Hashii initialization :: ~ Private ~
+    |--------------------------------------------------------------------------
+    */
+   
     /**
-     * Return the Hashii object.
+     * Return hashtags to caller.
+     * 
+     * @type {Array | Object} :: Based on instance 'format' options.
      */
-    return Hashii;
-})();
+    Hashii.prototype.$tags = _returnTags;
 
-if (typeof module !== 'undefined') {
-    module.exports = Hashii;
-}
+    /**
+     * Exposes the Hashii constructor for the user.
+     * 
+     * @type {Function} :: Set exports if Node env exists, otherwise expose global.
+     */
+    (typeof module !== 'undefined') ? module.exports = Hashii : window.Hashii = Hashii;
+})();
