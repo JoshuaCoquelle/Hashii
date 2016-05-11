@@ -9,7 +9,7 @@
 
  */
 
-(function() {
+var Hashii = (function() {
     /**
      * Hashii module scope accessor.
      */
@@ -242,5 +242,11 @@
      * 
      * @type {Function} :: Set exports if Node env exists, otherwise expose global.
      */
-    (typeof module !== 'undefined') ? module.exports = Hashii : window.Hashii = Hashii;
+    // (typeof module !== 'undefined') ? return module.exports = Hashii : return window.Hashii = Hashii;
+
+    if (typeof module !== 'undefined') {
+        return module.exports = Hashii;        
+    } else {
+        return window.Hashii = Hashii;
+    }
 })();
