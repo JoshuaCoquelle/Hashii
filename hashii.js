@@ -9,7 +9,7 @@
 
  */
 
-module.exports = function() {
+var Hashii = (function() {
     /**
      * Hashii module scope accessor.
      */
@@ -241,4 +241,4 @@ module.exports = function() {
      * Expose Hashii constructor
      */
     return Hashii;
-}
+})();
