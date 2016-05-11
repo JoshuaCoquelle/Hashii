@@ -1,8 +1,8 @@
 {
   "name": "hashii",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Easily parse hashtags from entire forms or a single field without any of the headache.",
-  "main": "index.js",
+  "main": "hashii.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

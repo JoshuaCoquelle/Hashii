@@ -9,7 +9,7 @@
 
  */
 
-var Hashii = (function() {
+module.exports = function() {
     /**
      * Hashii module scope accessor.
      */
@@ -226,7 +226,7 @@ var Hashii = (function() {
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii initialization :: ~ Private ~
+    | Hashii API methods :: ~ Public ~
     |--------------------------------------------------------------------------
     */
    
@@ -238,15 +238,7 @@ var Hashii = (function() {
     Hashii.prototype.$tags = _returnTags;
 
     /**
-     * Exposes the Hashii constructor for the user.
-     * 
-     * @type {Function} :: Set exports if Node env exists, otherwise expose global.
+     * Expose Hashii constructor
      */
-    // (typeof module !== 'undefined') ? return module.exports = Hashii : return window.Hashii = Hashii;
-
-    if (typeof module !== 'undefined') {
-        return module.exports = Hashii;        
-    } else {
-        return window.Hashii = Hashii;
-    }
-})();
+    return Hashii;
+}
