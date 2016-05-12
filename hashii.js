@@ -1,14 +1,8 @@
 /*
-
-  _    _           _____ _    _ _____ _____ 
- | |  | |   /\    / ____| |  | |_   _|_   _|
- | |__| |  /  \  | (___ | |__| | | |   | |  
- |  __  | / /\ \  \___ \|  __  | | |   | |  
- | |  | |/ ____ \ ____) | |  | |_| |_ _| |_ 
- |_|  |_/_/    \_\_____/|_|  |_|_____|_____|
-
- */
-
+|--------------------------------------------------------------------------
+| Hashii :: Easily parse hashtags.
+|--------------------------------------------------------------------------
+*/
 var Hashii = (function() {
     /**
      * Hashii module scope accessor.
@@ -24,17 +18,12 @@ var Hashii = (function() {
         $scope = this;
         $scope.options = _override(_defaults(), options);
 
-        /* Console accessors */
-        $scope.$element = _returnHashiiDomElement();
-        $scope.$defaults = _defaults();
-        $scope.$settings = $scope.options;
-
         _validateArguments(arguments[0]);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii initialization :: ~ Private ~
+    | Hashii initialization methods :: ~ Private ~
     |--------------------------------------------------------------------------
     */
 
@@ -117,6 +106,10 @@ var Hashii = (function() {
         }
 
         return true;
+    }
+
+    function _returnInstanceSettings() {
+        return $scope.options;
     }
 
     /**
@@ -226,27 +219,42 @@ var Hashii = (function() {
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii initialization :: ~ Private ~
+    | Hashii API methods :: ~ Public ~
     |--------------------------------------------------------------------------
     */
    
     /**
      * Return hashtags to caller.
      * 
-     * @type {Array | Object} :: Based on instance 'format' options.
+     * @return {Array | Object} :: Based on instance 'format' options.
      */
     Hashii.prototype.$tags = _returnTags;
 
     /**
+     * Hashii reference element
+     * 
+     * @return {DOM Element} :: Returns the DOM element attached to Hashii instance.
+     */
+    Hashii.prototype.$element = _returnHashiiDomElement;
+
+    /**
+     * Hashii constructor defaults.
+     * 
+     * @return {Object} :: Returns the Hashii constructor defaults object.
+     */
+    Hashii.prototype.$defaults = _defaults;
+
+    /**
+     * Instance settings.
+     * 
+     * @return {Object} :: Returns the Hashii instance settings.
+     */
+    Hashii.prototype.$settings = _returnInstanceSettings;
+
+    /**
      * Exposes the Hashii constructor for the user.
      * 
-     * @type {Function} :: Set exports if Node env exists, otherwise expose global.
+     * @return {Function}
      */
-    // (typeof module !== 'undefined') ? return module.exports = Hashii : return window.Hashii = Hashii;
-
-    if (typeof module !== 'undefined') {
-        return module.exports = Hashii;        
-    } else {
-        return window.Hashii = Hashii;
-    }
+    return Hashii;
 })();
