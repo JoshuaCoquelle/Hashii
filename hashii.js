@@ -226,7 +226,7 @@ var Hashii = (function() {
     /**
      * Return hashtags to caller.
      * 
-     * @return {Array | Object} :: Based on instance 'format' options.
+     * @return {Array | Object} :: Return based on instance 'format' options.
      */
     Hashii.prototype.$tags = _returnTags;
 
