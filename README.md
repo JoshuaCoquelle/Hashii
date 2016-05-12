@@ -80,7 +80,7 @@ var defaults = {
 If you would like to receive JSON ('{}') rather than an array ('[]'), all you need to do is pass a few options to the Hashii constructor to override the above defaults.
 
 ```js
-/* Expect a JSON object with the '#' symbol included this time */
+/* Request a JSON object with the '#' symbol included this time */
 var languages = new Hashii({
     ref: 'languages',
     format: '{}',
