@@ -1,15 +1,8 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Hashii = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*
-
-  _    _           _____ _    _ _____ _____ 
- | |  | |   /\    / ____| |  | |_   _|_   _|
- | |__| |  /  \  | (___ | |__| | | |   | |  
- |  __  | / /\ \  \___ \|  __  | | |   | |  
- | |  | |/ ____ \ ____) | |  | |_| |_ _| |_ 
- |_|  |_/_/    \_\_____/|_|  |_|_____|_____|
-
- */
-
+|--------------------------------------------------------------------------
+| Hashii :: Easily parse hashtags.
+|--------------------------------------------------------------------------
+*/
 var Hashii = (function() {
     /**
      * Hashii module scope accessor.
@@ -25,17 +18,12 @@ var Hashii = (function() {
         $scope = this;
         $scope.options = _override(_defaults(), options);
 
-        /* Console accessors */
-        $scope.$element = _returnHashiiDomElement();
-        $scope.$defaults = _defaults();
-        $scope.$settings = $scope.options;
-
         _validateArguments(arguments[0]);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Hashii initialization :: ~ Private ~
+    | Hashii initialization methods :: ~ Private ~
     |--------------------------------------------------------------------------
     */
 
@@ -118,6 +106,10 @@ var Hashii = (function() {
         }
 
         return true;
+    }
+
+    function _returnInstanceSettings() {
+        return $scope.options;
     }
 
     /**
@@ -234,16 +226,34 @@ var Hashii = (function() {
     /**
      * Return hashtags to caller.
      * 
-     * @type {Array | Object} :: Based on instance 'format' options.
+     * @return {Array | Object} :: Return based on instance 'format' options.
      */
     Hashii.prototype.$tags = _returnTags;
 
+    /* Hashii reference element
+     * 
+     * @return {DOM Element} :: Returns the DOM element attached to Hashii instance.
+     */
+    Hashii.prototype.$element = _returnHashiiDomElement;
+
     /**
-     * Expose Hashii constructor
+     * Hashii constructor defaults.
+     * 
+     * @return {Object} :: Returns the Hashii constructor defaults object.
+     */
+    Hashii.prototype.$defaults = _defaults;
+
+    /**
+     * Instance settings.
+     * 
+     * @return {Object} :: Returns the Hashii instance settings.
+     */
+    Hashii.prototype.$settings = _returnInstanceSettings;
+
+    /**
+     * Exposes the Hashii constructor for the user.
+     * 
+     * @return {Function}
      */
     return Hashii;
 })();
-
-module.exports = Hashii;
-},{}]},{},[1])(1)
-});
