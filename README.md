@@ -8,6 +8,8 @@
 
 ```
 
+[![npm version](https://badge.fury.io/js/hashii.svg)](https://badge.fury.io/js/hashii)
+
 # ~ Hashii ~
 
 Easily parse and format hashtags. No dependencies, no headaches.
