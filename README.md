@@ -9,6 +9,7 @@
 ```
 
 [![npm version](https://badge.fury.io/js/hashii.svg)](https://badge.fury.io/js/hashii)
+[![npm](https://img.shields.io/npm/dm/localeval.svg)](https://www.npmjs.com/package/hashii)
 
 # ~ Hashii ~
 
